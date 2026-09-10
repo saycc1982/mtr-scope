@@ -1,5 +1,13 @@
 # Changelog
 
+## v1.8.10
+- Shared PNG: ad text and QR auto-flip ink for the current theme (white on dark, black on light)
+- Shared PNG: hops with no responding IP show '*' instead of an empty cell
+
+## v1.8.9
+- Shared PNG: unresponsive hops now show '*' instead of an empty cell
+- Shared PNG: ad text and QR color auto-flip with the current theme (dark mode -> white, light mode -> black)
+
 ## v1.8.8
 - Shared PNG: the long IPv6 Target line soft-wraps onto the next line inside the exported image too, so it no longer runs past the right edge
 
