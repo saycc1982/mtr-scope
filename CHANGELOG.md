@@ -1,5 +1,13 @@
 # Changelog
 
+## v1.8.7
+- Header: long IPv6 target lines now wrap onto the next line instead of being cut off
+- Shared PNG: ad text moved to the footer right corner (left of the QR code)
+
+## v1.8.6
+- MORE menu: "Gateway Test" — one tap fills the current gateway IP and starts the MTR run
+- Shared PNG: footer now includes a QR code pointing to https://www.say.cc
+
 ## v1.8.5
 - Fixed: History was empty unless STOP was pressed — every run is now recorded at the end of its first completed cycle
 - Removed: packet-loss vibrate (feature and setting fully removed; VIBRATE permission dropped)
