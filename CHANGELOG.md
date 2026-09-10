@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.8.13
+- MORE menu: removed Batch Summary, Geo Summary, Trace Diff, Schedule Trace and Gateway Test (all code dropped — rarely useful, cluttered the menu)
+- Geo: removed the dead ipapi.se fallback; lookups go straight to ip-api.com
+- Manifest: dropped the now-unused WAKE_LOCK / POST_NOTIFICATIONS permissions
+
 ## v1.8.12
 - Fixed: ASN/Country codes never show up after stopping the trace — geo callback was dropped on a false 'not running' guard; now the result always updates its row, tab-scoped
 
