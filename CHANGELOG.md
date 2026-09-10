@@ -1,5 +1,8 @@
 # Changelog
 
+## v1.8.8
+- Shared PNG: the long IPv6 Target line soft-wraps onto the next line inside the exported image too, so it no longer runs past the right edge
+
 ## v1.8.7
 - Header: long IPv6 target lines now wrap onto the next line instead of being cut off
 - Shared PNG: ad text moved to the footer right corner (left of the QR code)
