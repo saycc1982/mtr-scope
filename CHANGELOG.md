@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.8.11
+- MTR result header: dropped the `(1.0s x 30)` interval/hops suffix to save screen space
+- Geo/ASN fallback to ipapi.se when ip-api.com returns an empty result for an IP (fixes blank ASN tags and map route failures on some public hops)
+
 ## v1.8.10
 - Shared PNG: ad text and QR auto-flip ink for the current theme (white on dark, black on light)
 - Shared PNG: hops with no responding IP show '*' instead of an empty cell
