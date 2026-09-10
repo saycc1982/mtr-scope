@@ -1,5 +1,8 @@
 # Changelog
 
+## v1.8.12
+- Fixed: ASN/Country codes never show up after stopping the trace — geo callback was dropped on a false 'not running' guard; now the result always updates its row, tab-scoped
+
 ## v1.8.11
 - MTR result header: dropped the `(1.0s x 30)` interval/hops suffix to save screen space
 - Geo/ASN fallback to ipapi.se when ip-api.com returns an empty result for an IP (fixes blank ASN tags and map route failures on some public hops)
