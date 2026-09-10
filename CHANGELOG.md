@@ -1,5 +1,8 @@
 # Changelog
 
+## v1.8.14
+- Geo/ASN: IPv6 addresses are now split into public vs private/reserved (loopback ::1, link-local fe80::/10, ULA fc00::/7, multicast ff00::/8, site-local, v4-mapped, ORCHIDv2) — public IPv6 hops get geolocated, private ones are skipped just like private IPv4 so the free ip-api.com quota is not wasted
+
 ## v1.8.13
 - MORE menu: removed Batch Summary, Geo Summary, Trace Diff, Schedule Trace and Gateway Test (all code dropped — rarely useful, cluttered the menu)
 - Geo: removed the dead ipapi.se fallback; lookups go straight to ip-api.com
