@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.8.22
+- TCP Port Scan hostname resolution fixed: the scan now tries every resolved address (IPv6-first) and uses the **first family that actually responds**, so a hostname whose AAAA records are unreachable (no/broken IPv6 route on the device) no longer appears as "cannot resolve / no open ports" — it falls back to the reachable stack (this is why plain-IP scans worked but hostnames did not)
+- DNS pre-check now distinguishes a real "Resolve failed" (no records) from a resolvable-but-no-open-port target, so the message is accurate
+- Host input is normalized consistently (scheme/path/port and IPv6 brackets stripped) so a pasted URL or `[::1]:443` scans the right host
+
 ## v1.8.21
 - DNS resolver hardened: random per-query transaction id + reply id check (defends off-path spoofing), full bounds-guarding so a malformed/truncated packet can never crash a lookup, and label-length clamp
 - rDNS cache eviction is now a single atomic (size-check + evict + put) step — previously the separate size/keys/remove calls could corrupt the map under concurrent probes
