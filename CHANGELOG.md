@@ -1,5 +1,8 @@
 # Changelog
 
+## v1.8.16
+- Public IP: fixed the WiFi→cellular / network-change detection not firing — the connectivity callback runs on a background worker (no Looper), so the refresh was silently dropped. Callbacks are now marshalled onto the main looper, so switching networks (e.g. turning off Wi-Fi and using the mobile data card) now busts the cache and refreshes the public IP in real time
+
 ## v1.8.15
 - Public IP: now re-detected automatically the instant the network route changes (Wi-Fi→Wi-Fi, Wi-Fi↔cellular, reconnect) — no longer stuck on the old network's cached address (cache busted only on a real route change, so no endpoint spam)
 - Public IP endpoints: pruned all dead / unreachable sources (v4v6.ident.me, 6.ip.sb, 6.myip.cc, 6.tned.me and others had no DNS record) and kept only confirmed-live AAAA endpoints (v6.ipinfo.io, v6.ident.me, api64.ipify.org); v6 responses are validated to contain a real IPv6 so an IPv4-only hop never echoes the v4 address into the v6 row
