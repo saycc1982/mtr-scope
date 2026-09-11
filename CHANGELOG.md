@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.8.17
+- Public IP: replaced the NetworkCallback-based detection (often not fired by the OS on a Wi-Fi↔cellular route switch) with a CONNECTIVITY_ACTION broadcast receiver, which is guaranteed to fire whenever the route changes. Switching Wi-Fi off to use the mobile data card now re-resolves the public IP instantly
+- Public IP: added a resume-time safety net — on returning to the app the active route is re-checked once, so an IP change that happened while backgrounded is also caught
+
 ## v1.8.16
 - Public IP: fixed the WiFi→cellular / network-change detection not firing — the connectivity callback runs on a background worker (no Looper), so the refresh was silently dropped. Callbacks are now marshalled onto the main looper, so switching networks (e.g. turning off Wi-Fi and using the mobile data card) now busts the cache and refreshes the public IP in real time
 
