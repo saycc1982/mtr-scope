@@ -1,5 +1,11 @@
 # Changelog
 
+## v1.8.25
+- Documentation brought back in line with the app: README feature list rewritten (multi-tab + batch, health bar + trend, public v4/v6 IP, MORE = Net Info / DNS Lookup / TCP Port Scan with the IP-family selector, history search/compare/favourite, PNG share, 3-state theme, widget) — the removed **Batch Summary / Geo Summary / Trace Diff / Schedule Trace / Gateway Test / unreachable alarm / background scheduler** entries are gone for good
+- In-app About no longer advertises "trace diff" or a "background scheduler"
+- Version badge now tracks the real release (1.8.25)
+- publish-github.sh now mirrors **README.md** to the public repo together with CHANGELOG.md (docs only)
+
 ## v1.8.24
 - TCP Port Scan IPv4+IPv6 now shows BOTH families (each scanned independently) instead of short-circuiting after the first IPv6 hit: result has one block per family with its IP, open count, and port list; a hostname with only v4 or only v6 records naturally shows a single block
 - No-IPv6 detection hardened: `hasIpv6Route()` scans `cm.allNetworks` (any route with NET_CAPABILITY_INET6) — checking only the active/default route wrongly reports "no IPv6" on the common Android split where default is IPv4-only and IPv6 lives on a separate route
