@@ -1,5 +1,11 @@
 # Changelog
 
+## v1.8.21
+- DNS resolver hardened: random per-query transaction id + reply id check (defends off-path spoofing), full bounds-guarding so a malformed/truncated packet can never crash a lookup, and label-length clamp
+- rDNS cache eviction is now a single atomic (size-check + evict + put) step — previously the separate size/keys/remove calls could corrupt the map under concurrent probes
+- TCP Port Scan dialog: explicit "HOST / IP" and "PORTS" field labels, keyboard auto-raises and pre-filled text is selected on open, removed the duplicated hint setter
+- App is English-only by design (no localization) — documented in AGENTS.md
+
 ## v1.8.20
 - TCP Port Scan: the host/IP field now opens with the keyboard raised and the field focused, so it is obviously editable even when pre-filled
 - TCP Port Scan: the scan title and result now print the resolved IP and family — `[IPv6]` or `[IPv4]` — and a hostname is resolved IPv6-first (Happy Eyeballs), so you can tell which stack was used
