@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.8.24
+- TCP Port Scan IPv4+IPv6 now shows BOTH families (each scanned independently) instead of short-circuiting after the first IPv6 hit: result has one block per family with its IP, open count, and port list; a hostname with only v4 or only v6 records naturally shows a single block
+- No-IPv6 detection hardened: `hasIpv6Route()` scans `cm.allNetworks` (any route with NET_CAPABILITY_INET6) — checking only the active/default route wrongly reports "no IPv6" on the common Android split where default is IPv4-only and IPv6 lives on a separate route
+- Warn text: "This network has no IPv6 route…"
+
 ## v1.8.23
 - TCP Port Scan: added an **IP FAMILY** dropdown (IPv4 / IPv6 / IPv4+IPv6, default IPv4, remembered). Forces which stack a hostname is dialed over, so you can deliberately test a host's IPv4 or IPv6 path
 - Rule: a literal IPv4 address is always probed over IPv4 and a literal IPv6 over IPv6, regardless of the selection; a hostname follows the selection (Both = IPv6 first, then IPv4 fallback)
