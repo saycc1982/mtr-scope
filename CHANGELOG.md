@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.8.20
+- TCP Port Scan: the host/IP field now opens with the keyboard raised and the field focused, so it is obviously editable even when pre-filled
+- TCP Port Scan: the scan title and result now print the resolved IP and family — `[IPv6]` or `[IPv4]` — and a hostname is resolved IPv6-first (Happy Eyeballs), so you can tell which stack was used
+- Engine: the `ping` probe process is now explicitly destroyed on the no-reply path (previously leaked a process/fd on every dropped probe)
+
 ## v1.8.19
 - TCP Port Scan: the host/IP is now an editable field (defaults to the current input; a URL is auto-stripped to its hostname) so you can scan any address directly from the dialog
 - TCP Port Scan: remembers the last used port list (port_spec) — the next scan opens with your previous list; the factory default is only used the very first time
