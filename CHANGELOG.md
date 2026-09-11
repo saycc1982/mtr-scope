@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.8.26
+- TCP Port Scan: IPv6 detection now has a second, independent net. If every IPv6 probe **timed out** (nothing refused, nothing answered) and no network route advertises IPv6, the result reports **"No IPv6 connectivity"** instead of a misleading "no open ports" — this catches firmware that does not publish `NET_CAPABILITY_INET6` (or publishes the IPv6 route outside the default network), which previously let an IPv6 scan quietly look like "all ports closed"
+- TCP Port Scan: each probe is now classified **open / refused / timed out** and the per-family block says which ("N/M open", "N/M refused", "no route — all timed out"), so a closed port and an unreachable host are never confused
+- README: TCP Port Scan + Network-stack-handling + FAQ sections document the two safety nets and the open/refused/timed-out distinction
+
 ## v1.8.25
 - Documentation brought back in line with the app: README feature list rewritten (multi-tab + batch, health bar + trend, public v4/v6 IP, MORE = Net Info / DNS Lookup / TCP Port Scan with the IP-family selector, history search/compare/favourite, PNG share, 3-state theme, widget) — the removed **Batch Summary / Geo Summary / Trace Diff / Schedule Trace / Gateway Test / unreachable alarm / background scheduler** entries are gone for good
 - In-app About no longer advertises "trace diff" or a "background scheduler"
