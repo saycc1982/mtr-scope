@@ -9,7 +9,7 @@ re-live-updating loss % and latency so you can watch a network path degrade or
 recover in real time — a familiar workflow if you are used to `mtr` on Linux.
 
 ![Platform](https://img.shields.io/badge/platform-Android-0891B2)
-![Version](https://img.shields.io/badge/version-1.8.27-green)
+![Version](https://img.shields.io/badge/version-1.8.28-green)
 ![API](https://img.shields.io/badge/API-26%2B-blue)
 
 ---
@@ -43,11 +43,11 @@ recover in real time — a familiar workflow if you are used to `mtr` on Linux.
   - **TCP Port Scan** — single / list / range / mixed port specs
     (`443` · `80,443,8080` · `1-1024` · `80,443,1-1024`), an **IP family selector**
     (IPv4 / IPv6 / IPv4 + IPv6, default IPv4, remembered) with each family's
-    result shown separately. Before any IPv6 target is probed, the app asks an
-    **IPv6-only echo service for your own public IPv6 address** — the only
-    reliable proof that IPv6 really works on that network — and when nothing
-    comes back it reports **"Your network does not support IPv6"** with a
-    one-tap *switch to IPv4* instead of pretending every port is closed. Results
+    result shown separately. Before any IPv6 target is probed, the app fetches
+    **its own public IPv6 from an IPv6-only service** — a host that publishes a
+    AAAA record and *no* A record, so a reply proves IPv6 really works. If none
+    comes back it reports **"Your network does not support IPv6"** and offers a
+    one-tap *switch to IPv4* rather than pretending every port is closed. Results
     also distinguish *open* / *refused* (host reached, port closed) / *timed out*
     (unreachable).
 - **History** — search / compare / favourite / clear past traces, auto-saved
@@ -167,15 +167,19 @@ Consider reading the password from an environment variable or a
   from a previous target can never land in a fresh table.
 - TCP Port Scan picks the family by explicit selection (not auto-fallback):
   a literal IPv4 / IPv6 address is always probed as typed, and a hostname
-  follows the chosen family. Whether IPv6 is usable at all is decided by
-  **asking an IPv6-only echo service for the device's own public IPv6 address**
-  — a reply can only have arrived over IPv6, so it is proof, whereas
+  follows the chosen family. Whether IPv6 is usable at all is decided **only**
+  by fetching the device's own public IPv6 from an IPv6-only service (AAAA
+  record, no A record). Nothing else on the system is trusted as proof:
   `NET_CAPABILITY_INET6` (15 = IPv4, 16 = IPv6 — hidden constants, hence the
-  magic numbers) is only a hint that some firmware omits and that may sit on a
-  non-default route. A cached public IPv6 or a published IPv6 route is accepted
-  for free; otherwise the probe runs before any IPv6 dial, and each probe is
-  still classified **open / refused / timed out** so a closed port and an
-  unreachable host are never conflated.
+  magic numbers) is set for the pseudo/dummy IPv6 prefixes that IPv4-only
+  cellular links hand out, so a v4-only phone can legitimately be labelled
+  "dual-stack", and an echo service that also has an A record is reachable over
+  v4 and answers with your **IPv4** address. The capability flag is therefore
+  shown in *Network Info* as a claim only ("IPv4 only — OS claims IPv6, but no
+  IPv6 address is reachable"), never as proof. Each probe is still classified
+  **open / refused / timed out**, and a *refused* result is deliberately not
+  taken as proof of a dead stack, because a network that can fabricate an IPv6
+  prefix can fabricate the reset as well.
 
 ### Route map detail
 
@@ -202,16 +206,22 @@ A longer version lives in-app under `☰ → FAQ`. Highlights:
 - **Why does the map route cross the Pacific?** It draws the great-circle
   shortest path, not a flat straight line.
 - **Why does a TCP port scan of an IPv6 address say "Your network does not
-  support IPv6"?** The app asked an IPv6-only echo service for this device's own
-  public IPv6 address and got nothing, which means no IPv6 packet can leave the
-  device — so an IPv6 scan could only ever time out. Use an IPv6-capable network
-  or scan IPv4. Note a **closed** port shows as *refused* (host was reached)
-  while an **unreachable** one shows as *timed out*; those are not the same.
-- **Why not just trust the OS "IPv6" capability flag?** Some firmware never sets
-  `NET_CAPABILITY_INET6`, and on Android the default network can be IPv4-only
-  even while IPv6 works, so the flag gives false answers in both directions.
-  Reaching an IPv6-only service and reading back your own IPv6 address is the
-  only end-to-end proof.
+  support IPv6"?** The app tried to fetch this device's own public IPv6 from an
+  IPv6-only service and got nothing, so no IPv6 packet can leave the device and
+  an IPv6 scan could only ever time out. Use an IPv6-capable network or scan
+  IPv4. A **closed** port shows as *refused* (the host was reached) while an
+  **unreachable** one shows as *timed out* — those are not the same.
+- **Network Info says "Dual-stack (v4+v6)" but IPv6 does not work — why?**
+  Carrier IPv4-only links can hand out a *pseudo* IPv6 prefix (for NAT64), and
+  Android reports its IPv6 capability for it, so the label can be true to the OS
+  while no IPv6 traffic flows. Where the app can measure the difference it says
+  so: *"IPv4 only — OS claims IPv6, but no IPv6 address is reachable"*. Never
+  treat that capability label as proof; only actually fetching your own IPv6
+  address is.
+- **Why is the public IPv6 row sometimes missing?** It is only shown when an
+  IPv6-only service actually answers with an IPv6 address; when that probe fails
+  the stale value is cleared, so a v4-only network never shows a v6 address it
+  cannot use.
 
 ---
 
