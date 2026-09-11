@@ -1,5 +1,11 @@
 # Changelog
 
+## v1.8.27
+- TCP Port Scan now determines IPv6 availability the only reliable way: it asks an **IPv6-only echo service for the device's own public IPv6 address** — a reply can only arrive over IPv6, so silence proves IPv6 is unusable. The OS `NET_CAPABILITY_INET6` flag is kept only as a free fast-path and is no longer trusted alone (firmware can omit it, and Android's default network may be IPv4-only even when IPv6 works — which is why an IPv6 scan on an IPv4-only network previously showed no warning)
+- The check runs off the UI thread and is cached per network (invalidated when the network changes); a fresh cached public IPv6 or a published IPv6 route short-circuits it
+- When IPv6 is unusable, no probes are sent at all: the dialog reports "Your network does not support IPv6" and turns its own button into *switch to IPv4*
+- README (TCP Port Scan, Network stack handling, FAQ) and AGENTS.md document the probe-based rule
+
 ## v1.8.26
 - TCP Port Scan: IPv6 detection now has a second, independent net. If every IPv6 probe **timed out** (nothing refused, nothing answered) and no network route advertises IPv6, the result reports **"No IPv6 connectivity"** instead of a misleading "no open ports" — this catches firmware that does not publish `NET_CAPABILITY_INET6` (or publishes the IPv6 route outside the default network), which previously let an IPv6 scan quietly look like "all ports closed"
 - TCP Port Scan: each probe is now classified **open / refused / timed out** and the per-family block says which ("N/M open", "N/M refused", "no route — all timed out"), so a closed port and an unreachable host are never confused
