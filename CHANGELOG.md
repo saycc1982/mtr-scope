@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.8.19
+- TCP Port Scan: the host/IP is now an editable field (defaults to the current input; a URL is auto-stripped to its hostname) so you can scan any address directly from the dialog
+- TCP Port Scan: remembers the last used port list (port_spec) — the next scan opens with your previous list; the factory default is only used the very first time
+
 ## v1.8.18
 - Public IP: fixed Wi-Fi→cellular not refreshing promptly. On Android the Wi-Fi-off broadcast is fired before the cellular route becomes the default, so the first check still saw the old (Wi-Fi) network. Every CONNECTIVITY_ACTION now (a) busts and re-resolves immediately, (b) always busts regardless of route comparison, (c) schedules a one-shot retry a moment later so the new IP appears even when the route settles late — works both while the app is open and on resume
 
