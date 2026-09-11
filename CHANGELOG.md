@@ -1,5 +1,14 @@
 # Changelog
 
+## v1.8.28
+- IPv6 availability is now decided **only** by fetching the device's own public IPv6 from an AAAA-only (no A record) echo service — both previous shortcuts were removed and both were proven wrong on a real carrier network:
+  - `NET_CAPABILITY_INET6` is set for the **pseudo/dummy IPv6 prefixes** that IPv4-only cellular links hand out for NAT64, so "Dual-stack (v4+v6)" in Network Info can be true to Android while no IPv6 traffic flows — this is why the previous build still reported v6 as available and sent no warning
+  - an echo service that *also* has an A record is reached over IPv4 and answers with your **IPv4** address (`api64.ipify.org` was measured doing exactly this) — it has been removed from the probe list
+  - a cached "public IPv6" is no longer trusted either, and a failed probe now clears that field so the header never shows a v6 address the network cannot use
+- An IPv6 port scan that cannot be delivered now reports the failure instead of a misleading "all scanned ports closed (connection refused)": the probe result is classified *open / refused / timed out*, and a *refused* answer is deliberately **not** read as "v6 works", since a network able to fabricate a prefix can fabricate the reset too
+- Network Info now shows the OS claim separately from the measurement ("IPv4 only — OS claims IPv6, but no IPv6 address is reachable — pseudo/dummy prefix") and never labels the link Dual-stack from an unmeasured verdict
+- Added `tools/check-v6-endpoints.sh` which verifies each probe host really is AAAA-only, has no A record, and is live (run it before touching `MY_IP_SOURCES_V6`; this repo's build host has no IPv6, so liveness must be confirmed on an IPv6-capable network)
+
 ## v1.8.27
 - TCP Port Scan now determines IPv6 availability the only reliable way: it asks an **IPv6-only echo service for the device's own public IPv6 address** — a reply can only arrive over IPv6, so silence proves IPv6 is unusable. The OS `NET_CAPABILITY_INET6` flag is kept only as a free fast-path and is no longer trusted alone (firmware can omit it, and Android's default network may be IPv4-only even when IPv6 works — which is why an IPv6 scan on an IPv4-only network previously showed no warning)
 - The check runs off the UI thread and is cached per network (invalidated when the network changes); a fresh cached public IPv6 or a published IPv6 route short-circuits it
