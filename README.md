@@ -9,7 +9,7 @@ re-live-updating loss % and latency so you can watch a network path degrade or
 recover in real time — a familiar workflow if you are used to `mtr` on Linux.
 
 ![Platform](https://img.shields.io/badge/platform-Android-0891B2)
-![Version](https://img.shields.io/badge/version-1.8.24-green)
+![Version](https://img.shields.io/badge/version-1.8.26-green)
 ![API](https://img.shields.io/badge/API-26%2B-blue)
 
 ---
@@ -42,9 +42,12 @@ recover in real time — a familiar workflow if you are used to `mtr` on Linux.
     with history; tap a returned host/IP to start an MTR or PING on it.
   - **TCP Port Scan** — single / list / range / mixed port specs
     (`443` · `80,443,8080` · `1-1024` · `80,443,1-1024`), an **IP family selector**
-    (IPv4 / IPv6 / IPv4 + IPv6, default IPv4, remembered), a per-family result
-    view, and an explicit **No IPv6 connectivity** warning (with a one-tap
-    fallback to IPv4) when the current network carries no IPv6.
+    (IPv4 / IPv6 / IPv4 + IPv6, default IPv4, remembered) with each family's
+    result shown separately, and **two** IPv6-safety nets: an immediate
+    *No IPv6 connectivity* warning (one tap to fall back to IPv4) when the OS
+    reports no IPv6 route, plus a post-scan check that reports the same warning
+    when every IPv6 probe simply timed out. Results also distinguish
+    *refused* (port closed, host reached) from *timed out* (unreachable).
 - **History** — search / compare / favourite / clear past traces, auto-saved
   after the first complete round (not only on STOP).
 - **Export & copy** — copy the table as text / CSV / JSON, share, or export the
@@ -163,8 +166,13 @@ Consider reading the password from an environment variable or a
 - TCP Port Scan picks the family by explicit selection (not auto-fallback):
   a literal IPv4 / IPv6 address is always probed as typed, and a hostname
   follows the chosen family. IPv6 presence is decided by scanning **all**
-  network routes for `NET_CAPABILITY_INET6` — the active/default route alone
-  can be IPv4-only on a working dual-stack connection.
+  network routes for `NET_CAPABILITY_INET6` (15 = IPv4, 16 = IPv6 — hidden
+  constants, hence the magic numbers) — the active/default route alone can be
+  IPv4-only on a working dual-stack connection. Because that capability flag is
+  only a hint (some firmware does not publish it, or hides the IPv6 route), the
+  scan additionally classifies each probe as **open / refused / timed out**: if
+  every IPv6 probe timed out *and* no route claims IPv6, the user is told
+  "No IPv6 connectivity" instead of being shown a misleading "no open ports".
 
 ### Route map detail
 
@@ -190,10 +198,15 @@ A longer version lives in-app under `☰ → FAQ`. Highlights:
   that owns that IP.
 - **Why does the map route cross the Pacific?** It draws the great-circle
   shortest path, not a flat straight line.
-- **Why does a TCP port scan of a hostname stop with "No IPv6 connectivity"?**
-  The selected family needs IPv6 but the current network has no IPv6 route
-  (checked across all routes). Pick IPv4, or move to an IPv6-capable network —
-  otherwise every probe would just time out.
+- **Why does a TCP port scan of an IPv6 address stop with "No IPv6 connectivity"?**
+  The current network carries no IPv6 route, so no IPv6 probe could ever be
+  delivered — the warning appears both before scanning (OS capability check)
+  and after it (every IPv6 probe timed out). Use an IPv6-capable network, or
+  scan IPv4. Note a **closed** port shows as *refused* (the host was reached)
+  while an **unreachable** one shows as *timed out* — those are not the same.
+- **Why does a scan of an IPv6 hostname sometimes look like it failed?** Same
+  cause: the host has AAAA records but the device has no IPv6 route. Select
+  IPv4 (or IPv4 + IPv6) instead.
 
 ---
 
