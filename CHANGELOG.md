@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.8.23
+- TCP Port Scan: added an **IP FAMILY** dropdown (IPv4 / IPv6 / IPv4+IPv6, default IPv4, remembered). Forces which stack a hostname is dialed over, so you can deliberately test a host's IPv4 or IPv6 path
+- Rule: a literal IPv4 address is always probed over IPv4 and a literal IPv6 over IPv6, regardless of the selection; a hostname follows the selection (Both = IPv6 first, then IPv4 fallback)
+- If the network route has no IPv6 (no NET_CAPABILITY_INET6) and an IPv6 probe is requested (IPv6 literal, or hostname with IPv6/Both), the scan now **stops and warns** "No IPv6 connectivity" with a one-tap "switch to IPv4" option, instead of silently returning no-open-port
+
 ## v1.8.22
 - TCP Port Scan hostname resolution fixed: the scan now tries every resolved address (IPv6-first) and uses the **first family that actually responds**, so a hostname whose AAAA records are unreachable (no/broken IPv6 route on the device) no longer appears as "cannot resolve / no open ports" — it falls back to the reachable stack (this is why plain-IP scans worked but hostnames did not)
 - DNS pre-check now distinguishes a real "Resolve failed" (no records) from a resolvable-but-no-open-port target, so the message is accurate
