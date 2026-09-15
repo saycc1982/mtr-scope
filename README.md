@@ -9,7 +9,7 @@ re-live-updating loss % and latency so you can watch a network path degrade or
 recover in real time — a familiar workflow if you are used to `mtr` on Linux.
 
 ![Platform](https://img.shields.io/badge/platform-Android-0891B2)
-![Version](https://img.shields.io/badge/version-1.8.30-green)
+![Version](https://img.shields.io/badge/version-1.8.29-green)
 ![API](https://img.shields.io/badge/API-26%2B-blue)
 
 ---
@@ -37,15 +37,7 @@ recover in real time — a familiar workflow if you are used to `mtr` on Linux.
   private/internal hops and starting from your own public IP.
 - **Your public IP (v4 + v6)** — shown in the header via a live external probe,
   cached and re-checked automatically when the route or network changes.
-- **One-tap Diagnostics** (`MORE → Run Diagnostics`, also the chip on the empty
-  screen) — runs DNS resolution, an IPv4-egress connect, an HTTPS connect and a
-  real IPv6 probe in a single tap, then reports **Online (IPv4 + IPv6) / Online
-  (IPv4) / Online (limited) / Offline** with a per-check ✔/✘ breakdown, copyable
-  as text. It tells you what is broken instead of leaving you to guess from an
-  error in some other screen, and it calls out the common case where the OS
-  claims IPv6 but the link cannot actually carry it.
 - **`MORE` toolbox**
-  - **Run Diagnostics** — the one-tap connectivity report described above.
   - **Net Info** — interface, IP stack (Dual-stack / v4 / v6), MTU, gateway,
     DNS servers.
   - **DNS Lookup** — raw UDP A / AAAA / CNAME / NS / MX / TXT / PTR / WHOIS / ALL,
@@ -66,19 +58,10 @@ recover in real time — a familiar workflow if you are used to `mtr` on Linux.
   table as a PNG (QR code of the result included); a `☰` diagnostic log.
 - **Dark / light theme** — 3-state (system / light / dark), switchable even
   while tracing; the active host is resumed automatically.
-- **Two languages: English + Chinese** — *System default*, *English*,
-  *简体中文* or *繁體中文*, picked in `☰ → Language`. The app carries its own
-  language setting, so it can be switched inside the app instead of having to
-  go through the system settings page; the entry stays usable whatever the
-  current interface language is.
-- **Starter panel** — before the first trace the empty screen is not left blank:
-  it shows the current connection state plus tap-to-run example targets, so a
-  first-time user has something to press rather than a table header waiting for
-  input.
 - **Home widget** — tap the widget to enter a host, then `▶ MTR` / `▶ PING`
   runs it straight away (each widget instance remembers its own host).
-- **`☰` hamburger menu** — Log, About, FAQ and Language tucked away to keep the
-  main UI clean.
+- **`☰` hamburger menu** — Log, About and FAQ tucked away to keep the main UI
+  clean.
 
 > Note on probing: raw ICMP is blocked on Android, so MtrScope shells out to
 > the system `ping` binary with increasing TTLs (`-t`) to reveal each hop —
@@ -173,8 +156,6 @@ Consider reading the password from an environment variable or a
 | `DnsQuery` | Minimal raw UDP DNS resolver (A / AAAA / CNAME / MX / NS / TXT / PTR), random per-query id with reply matching and full bounds guarding. |
 | `PortScan` | Concurrent TCP connect scanner with a family selector (IPv4 / IPv6 / both) that reports each family separately. |
 | `NetInfo` | Active-interface report: transport, IP stack (via network capabilities), MTU, gateway, DNS servers. |
-| `Diagnostics` | One-tap connectivity report for `Run Diagnostics`: DNS / IPv4 egress / HTTPS / real IPv6 probe, rolled into one verdict. Reuses the same IPv6-egress probe as the TCP scanner, so the two screens can never disagree. |
-| `Lang` | In-app language selection (system / English / Chinese S or T), applied before the window is created. |
 | `map.html` | A local Leaflet 1.9.4 page that draws the great-circle route, unwraps the antimeridian, and renders red direction arrows. |
 | `HistoryStore` | Persists past traces for search / compare / favourite / clear. |
 
@@ -225,19 +206,6 @@ A longer version lives in-app under `☰ → FAQ`. Highlights:
   `Registrant: 中國電信集團公司`. If a reply ever looks wrong again, the
   registry in question is the exception, and the raw bytes can be checked with
   `printf 'domain\r\n' | nc <whois-server> 43`.
-- **Which one-tap check tells me what is broken?** `MORE → Run Diagnostics`
-  (or the chip on the empty screen). It runs four checks — DNS resolution, an
-  IPv4-egress connect, an HTTPS connect and a real IPv6 probe — and ends on one
-  verdict: **Online (IPv4 + IPv6)**, **Online (IPv4)**, **Online (limited)** or
-  **Offline**, with the failed items named below it. The full result copies as
-  text, so it can be pasted into a bug report instead of a screenshot. It shares
-  the IPv6 probe with TCP Port Scan, so the two screens never disagree.
-- **Where do I change the language?** `☰ → Language`. The app carries its own
-  language setting (system default / English / 简体中文 / 繁體中文) instead of
-  forcing you through the system settings page, and applies it on the way in so
-  the switch takes effect instantly. The rows in that menu are labelled in
-  their own language, so the entry stays findable even when the current
-  interface language is unreadable.
 - **Why are some hops internal IPs?** Those are your ISP's route-local
   addresses; they have no public geolocation and are skipped on the map.
 - **Why do some hops show `*`?** No reply for that TTL on this round (a router
