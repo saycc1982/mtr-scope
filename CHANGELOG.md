@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.8.29
+- WHOIS mojibake fixed — it was our decoder, not the registries. Replies were decoded as ISO-8859-1, which turned CNNIC's UTF-8 Chinese into "ä¸­å­½çµä¿¡…"; `.cn` / `.com.cn` records now read correctly (`chinatelecom.com.cn` → `Registrant: 中國電信集團公司`, `Sponsoring Registrar: 北京新网数码信息技术有限公司`)
+- Decoding order is UTF-8 first with a Latin-1 fallback used only when strict UTF-8 yields a replacement character — safe because Verisign, APNIC and IANA were measured to be pure ASCII, while the fallback keeps any legacy Latin-1 reply intact
+- README (Features, Internals, FAQ) and AGENTS.md document the encoding rule plus a standing rule that external endpoints/URLs must be connectivity-checked before they are added
+
 ## v1.8.28
 - IPv6 availability is now decided **only** by fetching the device's own public IPv6 from an AAAA-only (no A record) echo service — both previous shortcuts were removed and both were proven wrong on a real carrier network:
   - `NET_CAPABILITY_INET6` is set for the **pseudo/dummy IPv6 prefixes** that IPv4-only cellular links hand out for NAT64, so "Dual-stack (v4+v6)" in Network Info can be true to Android while no IPv6 traffic flows — this is why the previous build still reported v6 as available and sent no warning
