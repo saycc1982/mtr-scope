@@ -9,7 +9,7 @@ re-live-updating loss % and latency so you can watch a network path degrade or
 recover in real time — a familiar workflow if you are used to `mtr` on Linux.
 
 ![Platform](https://img.shields.io/badge/platform-Android-0891B2)
-![Version](https://img.shields.io/badge/version-1.8.28-green)
+![Version](https://img.shields.io/badge/version-1.8.29-green)
 ![API](https://img.shields.io/badge/API-26%2B-blue)
 
 ---
@@ -27,7 +27,9 @@ recover in real time — a familiar workflow if you are used to `mtr` on Linux.
 - **rDNS (reverse DNS)** — resolves the hostname of each hop; toggleable live
   while tracing.
 - **WHOIS** — tap a hop (or a domain/IP in the header) to look up WHOIS for
-  IPs and eTLD domains.
+  IPs and eTLD domains. Replies are decoded UTF-8 first, so non-ASCII registry
+  data such as the Chinese registrant / registrar returned for `.cn` and
+  `.com.cn` domains reads correctly.
 - **Health bar + trend chart** — target-hop summary (`Loss / Avg / Jitter`),
   tap for the time-series trend chart.
 - **Visual route map** — plots each *public* hop on an OpenStreetMap / Leaflet
@@ -150,7 +152,7 @@ Consider reading the password from an environment variable or a
 | --- | --- |
 | `MtrEngine` | Orchestrates the continuous trace using the system `ping` binary with increasing TTLs. |
 | `GeoLookup` | Resolves each hop to country / ASN via `ip-api.com` (public IPs only), with a disk cache and country-centroid fallback for the map. |
-| `Whois` / `Psl` | WHOIS lookups including eTLD extraction (`Public Suffix List`). |
+| `Whois` / `Psl` | WHOIS lookups including eTLD extraction (`Public Suffix List`). Port 43 replies are decoded UTF-8 first and fall back to Latin-1 only when strict UTF-8 yields a replacement character (measured: CNNIC answers in UTF-8, Verisign / APNIC / IANA are pure ASCII). |
 | `DnsQuery` | Minimal raw UDP DNS resolver (A / AAAA / CNAME / MX / NS / TXT / PTR), random per-query id with reply matching and full bounds guarding. |
 | `PortScan` | Concurrent TCP connect scanner with a family selector (IPv4 / IPv6 / both) that reports each family separately. |
 | `NetInfo` | Active-interface report: transport, IP stack (via network capabilities), MTU, gateway, DNS servers. |
@@ -197,6 +199,13 @@ Consider reading the password from an environment variable or a
 
 A longer version lives in-app under `☰ → FAQ`. Highlights:
 
+- **Why does WHOIS show accented garbage like `ä¸­å­½çµä¿¡`?** That was our
+  bug, since fixed: WHOIS replies are decoded as UTF-8 first (with Latin-1 only as
+  a fallback), and registries such as CNNIC (`whois.cnnic.cn`) really do return
+  UTF-8 Chinese — `chinatelecom.com.cn` yields
+  `Registrant: 中國電信集團公司`. If a reply ever looks wrong again, the
+  registry in question is the exception, and the raw bytes can be checked with
+  `printf 'domain\r\n' | nc <whois-server> 43`.
 - **Why are some hops internal IPs?** Those are your ISP's route-local
   addresses; they have no public geolocation and are skipped on the map.
 - **Why do some hops show `*`?** No reply for that TTL on this round (a router
