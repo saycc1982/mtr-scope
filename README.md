@@ -12,7 +12,11 @@ recover in real time — a familiar workflow if you are used to `mtr` on Linux.
 ![Version](https://img.shields.io/badge/version-1.8.29-green)
 ![API](https://img.shields.io/badge/API-26%2B-blue)
 
-**[Download the latest release →](https://github.com/saycc1982/mtr-scope/releases/latest)**
+## Install
+
+**Google Play** — <https://play.google.com/store/apps/details?id=com.paperclip.mtr>
+
+**Or download the APK directly** — <https://github.com/saycc1982/mtr-scope/releases/latest>
 
 ---
 
@@ -81,13 +85,15 @@ recover in real time — a familiar workflow if you are used to `mtr` on Linux.
 
 ## Getting started
 
-This repository is the **distribution** page for MtrScope — it carries no source
-code. Everything you need is a single signed APK on the latest
+**Google Play** (auto-updates, no sideload prompt):
+<https://play.google.com/store/apps/details?id=com.paperclip.mtr>
+
+This repository is also the **direct APK distribution** channel for MtrScope —
+it carries no source code, and the single signed APK sits on the latest
 [release](https://github.com/saycc1982/mtr-scope/releases/latest):
 
 1. Download `mtrscope-v<version>.apk`.
-2. Open it on the device and allow the install when prompted (it is a sideload,
-   not a Play install).
+2. Open it on the device and allow the install when prompted (it is a sideload).
 3. The app needs no account, no ads and only the two network permissions it uses
    (`INTERNET` + `ACCESS_NETWORK_STATE`). It runs on Android **8.0** (API 26) or
    newer.
@@ -95,6 +101,9 @@ code. Everything you need is a single signed APK on the latest
 The same APK is mirrored on the author's own download server, so a release stays
 obtainable even if a CDN ever drops it — the exact URL for the current build is
 listed in that release's notes.
+
+The Play listing and the GitHub APK carry the same build, so picking either one
+gets you the identical app; the Play route simply keeps itself updated.
 
 ---
 
@@ -209,6 +218,7 @@ A longer version lives in-app under `☰ → FAQ`. Highlights:
 - **Company:** FOREWIN TELECOM GROUP LIMITED
 - **Location:** HONG KONG, CHINA
 - <https://www.hkt.cc> · <https://www.say.cc>
+- **Google Play:** <https://play.google.com/store/apps/details?id=com.paperclip.mtr>
 
 ---
 
