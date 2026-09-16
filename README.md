@@ -12,6 +12,8 @@ recover in real time — a familiar workflow if you are used to `mtr` on Linux.
 ![Version](https://img.shields.io/badge/version-1.8.29-green)
 ![API](https://img.shields.io/badge/API-26%2B-blue)
 
+**[Download the latest release →](https://github.com/saycc1982/mtr-scope/releases/latest)**
+
 ---
 
 ## Features
@@ -71,42 +73,28 @@ recover in real time — a familiar workflow if you are used to `mtr` on Linux.
 
 ## Screenshots
 
-*(Add screenshots of the hop list, route map, and settings here.)*
+| Empty start screen | History dialog |
+| --- | --- |
+| ![Empty start screen](screenshots/dark-empty.png) | ![History dialog](screenshots/history-dialog.png) |
 
 ---
 
-## Getting Started
+## Getting started
 
-### Prerequisites
+This repository is the **distribution** page for MtrScope — it carries no source
+code. Everything you need is a single signed APK on the latest
+[release](https://github.com/saycc1982/mtr-scope/releases/latest):
 
-- Android **API 26+** (Android 8.0)
-- Android Studio / Gradle with JDK 17
-- An Android device with internet access (geolocation + map tiles are fetched
-  live)
+1. Download `mtrscope-v<version>.apk`.
+2. Open it on the device and allow the install when prompted (it is a sideload,
+   not a Play install).
+3. The app needs no account, no ads and only the two network permissions it uses
+   (`INTERNET` + `ACCESS_NETWORK_STATE`). It runs on Android **8.0** (API 26) or
+   newer.
 
-### Build
-
-```bash
-# Local release APK
-./gradlew assembleRelease
-# Google Play AAB bundle
-./gradlew bundleRelease
-```
-
-The release APK is produced at:
-
-```
-app/build/outputs/apk/release/app-release.apk
-```
-
-> The release build is signed. The keystore is intentionally **not** committed
-> to this repository — see [Building a signed release](#building-a-signed-release).
-
-### Install
-
-```bash
-adb install -r app/build/outputs/apk/release/app-release.apk
-```
+The same APK is mirrored on the author's own download server, so a release stays
+obtainable even if a CDN ever drops it — the exact URL for the current build is
+listed in that release's notes.
 
 ---
 
@@ -123,30 +111,10 @@ adb install -r app/build/outputs/apk/release/app-release.apk
 
 ---
 
-## Building a signed release
-
-This repo does **not** include the signing keystore (committing a release key
-or its password would be a security risk). To build a release you must supply
-your own `mtrscope.keystore` in the project root and set the matching
-credentials in `app/build.gradle`:
-
-```groovy
-signingConfigs {
-    release {
-        storeFile rootProject.file('mtrscope.keystore')
-        storePassword 'YOUR_STORE_PASSWORD'
-        keyAlias 'YOUR_KEY_ALIAS'
-        keyPassword 'YOUR_KEY_PASSWORD'
-    }
-}
-```
-
-Consider reading the password from an environment variable or a
-`gradle.properties` that is git-ignored rather than hard-coding it.
-
----
-
 ## Internals / How it works
+
+The following describes the design at a concept level. It is documentation, not
+buildable code — this public repository contains no source.
 
 | Piece | What it does |
 | --- | --- |
@@ -246,4 +214,7 @@ A longer version lives in-app under `☰ → FAQ`. Highlights:
 
 ## License
 
-*Add your license here (e.g. MIT / Apache-2.0) before publishing the repo.*
+The published binaries are distributed under the terms stated in the release
+notes of the version you download. This repository is a distribution channel: it
+holds the installable APK, the changelog and the documentation only — **no
+source code is published here**, and the app is closed-source.
