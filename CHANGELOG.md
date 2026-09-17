@@ -1,5 +1,13 @@
 # Changelog
 
+## v1.8.31
+Bug-fix pass over the network helpers (no visible feature change).
+- **IPv6 literals now parse as IPs** — `Psl.isIp()` no longer rejects a valid colon-form address (the hex/colon regex previously allowed a match without any `:` and the 4-group dotted form was misread as IPv4), and it still refuses `gggg::1` and plain domains like `a.b.c.d`. Groups are checked for length (≤4 hex digits, ≤8 groups) before the system resolver decides, so the two paths cannot disagree.
+- **`DnsQuery.lookupRdns()` now does IPv6 too** — `ip6.arpa` (reversed nibbles) is implemented, so RDNS on an IPv6 hop / `::1` resolves instead of returning blank. The old IPv4 `in-addr.arpa` path is unchanged.
+- **TXT records keep their structure** — a TXT answer's separate `<char-string>`s are returned as one line each (`Record.Txt`) and are no longer chopped on spaces, while every other record type is still tokenised so host/IP stay individually clickable. `Record.Single` carries an explicit `type` label (A/AAAA/PTR/CNAME/NS/MX) for the first column.
+- **`GeoLookup.selfPoint()` releases its HTTP connection** — it now disconnects in a `finally` like `fetchJson` does, so each MTR run stops leaking one `HttpURLConnection`.
+- `Psl.MULTI` de-duplicated (four TLDs were listed twice); the `setOf` makes it a cosmetic-only cleanup.
+
 ## v1.8.29
 - WHOIS mojibake fixed — it was our decoder, not the registries. Replies were decoded as ISO-8859-1, which turned CNNIC's UTF-8 Chinese into "ä¸­å­½çµä¿¡…"; `.cn` / `.com.cn` records now read correctly (`chinatelecom.com.cn` → `Registrant: 中國電信集團公司`, `Sponsoring Registrar: 北京新网数码信息技术有限公司`)
 - Decoding order is UTF-8 first with a Latin-1 fallback used only when strict UTF-8 yields a replacement character — safe because Verisign, APNIC and IANA were measured to be pure ASCII, while the fallback keeps any legacy Latin-1 reply intact
