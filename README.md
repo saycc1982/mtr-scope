@@ -9,7 +9,7 @@ re-live-updating loss % and latency so you can watch a network path degrade or
 recover in real time — a familiar workflow if you are used to `mtr` on Linux.
 
 ![Platform](https://img.shields.io/badge/platform-Android-0891B2)
-![Version](https://img.shields.io/badge/version-1.8.29-green)
+![Version](https://img.shields.io/badge/version-1.8.31-green)
 ![API](https://img.shields.io/badge/API-26%2B-blue)
 
 ## Install
@@ -31,7 +31,7 @@ recover in real time — a familiar workflow if you are used to `mtr` on Linux.
   autonomous system (e.g. `[HK AS9429 HKT]`), toggled on/off via the ASN
   box. Reserved/private ranges are skipped (no public ASN).
 - **rDNS (reverse DNS)** — resolves the hostname of each hop; toggleable live
-  while tracing.
+  while tracing. IPv4 (`in-addr.arpa`) and IPv6 (`ip6.arpa`) are both handled.
 - **WHOIS** — tap a hop (or a domain/IP in the header) to look up WHOIS for
   IPs and eTLD domains. Replies are decoded UTF-8 first, so non-ASCII registry
   data such as the Chinese registrant / registrar returned for `.cn` and
